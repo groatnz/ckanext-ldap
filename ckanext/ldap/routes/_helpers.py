@@ -119,7 +119,9 @@ def get_or_create_ldap_user(ldap_user_dict):
     '''
     # Look for existing user, and if found return it.
     # AVW 2020-08-04 For PFR lowercase the username
-    ldap_user_dict[u'username'] = ldap_user_dict[u'username'].lower()
+    if toolkit.config[u'ckanext.ldap.case_insensitive_username']:
+        ldap_user_dict[u'username'] = ldap_user_dict[u'username'].lower()
+
     ldap_user = LdapUser.by_ldap_id(ldap_user_dict[u'username'])
     if ldap_user:
         # TODO: Update the user detail.
@@ -129,7 +131,6 @@ def get_or_create_ldap_user(ldap_user_dict):
     # Check whether we have a name conflict (based on the ldap name, without mapping
     # it to allowed chars)
     exists = ckan_user_exists(ldap_user_dict[u'username'])
-    log.debug('ckan_user_exists', extra=exists) # AVW 2020-08 debug LDAP
     if exists[u'exists'] and not exists[u'is_ldap']:
         # If ckanext.ldap.migrate is set, update exsting user_dict.
         if not toolkit.config[u'ckanext.ldap.migrate']:
@@ -138,7 +139,6 @@ def get_or_create_ldap_user(ldap_user_dict):
         else:
             user_dict = get_user_dict(ldap_user_dict[u'username'])
             update = True
-    log.debug('Update %s', update) # AVW 2020-08 debug LDAP
     # If a user with the same ckan name already exists but is an LDAP user, this means
     # (given that we didn't find it above) that the conflict arises from having mangled
     # another user's LDAP name. There will not however be a conflict based on what is
