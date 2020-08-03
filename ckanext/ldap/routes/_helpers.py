@@ -70,8 +70,9 @@ def ckan_user_exists(user_name):
 
     '''
     try:
+        print user_name.lower() # AVW 2020-08 debug LDAP
         user = get_user_dict(user_name.lower())
-        print user
+        print user # AVW 2020-08 debug LDAP
     except toolkit.ObjectNotFound:
         return {
             u'exists': False,
