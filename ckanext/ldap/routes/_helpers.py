@@ -70,7 +70,7 @@ def ckan_user_exists(user_name):
 
     '''
     try:
-        user = get_user_dict(user_name.lower)
+        user = get_user_dict(user_name.lower())
         print user
     except toolkit.ObjectNotFound:
         return {
