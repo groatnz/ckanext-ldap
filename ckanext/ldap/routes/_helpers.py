@@ -72,7 +72,7 @@ def ckan_user_exists(user_name):
     try:
         log.debug('user_name %s', user_name.lower()) # AVW 2020-08 debug LDAP
         user = get_user_dict(user_name.lower()) 
-        log.debug('user %s', user.name, extra=user) # AVW 2020-08 debug LDAP
+        log.debug('user ', extra=user) # AVW 2020-08 debug LDAP
     except toolkit.ObjectNotFound:
         return {
             u'exists': False,
@@ -129,6 +129,7 @@ def get_or_create_ldap_user(ldap_user_dict):
     # Check whether we have a name conflict (based on the ldap name, without mapping
     # it to allowed chars)
     exists = ckan_user_exists(ldap_user_dict[u'username'])
+    log.debug('ckan_user_exists', extra=exists) # AVW 2020-08 debug LDAP
     if exists[u'exists'] and not exists[u'is_ldap']:
         # If ckanext.ldap.migrate is set, update exsting user_dict.
         if not toolkit.config[u'ckanext.ldap.migrate']:
