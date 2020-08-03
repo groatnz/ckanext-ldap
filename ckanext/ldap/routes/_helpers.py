@@ -70,11 +70,8 @@ def ckan_user_exists(user_name):
 
     '''
     try:
-        log.debug('user_name %s', user_name.lower()) # AVW 2020-08 debug LDAP
-        user = get_user_dict(user_name.lower()) 
-        log.debug('user found') # AVW 2020-08 debug LDAP
+        user = get_user_dict(user_name) 
     except toolkit.ObjectNotFound:
-        log.debug('user not found') # AVW 2020-08 debug LDAP
         return {
             u'exists': False,
             u'is_ldap': False
@@ -121,6 +118,8 @@ def get_or_create_ldap_user(ldap_user_dict):
 
     '''
     # Look for existing user, and if found return it.
+    # AVW 2020-08-04 For PFR lowercase the username
+    ldap_user_dict[u'username'] = ldap_user_dict[u'username'].lower()
     ldap_user = LdapUser.by_ldap_id(ldap_user_dict[u'username'])
     if ldap_user:
         # TODO: Update the user detail.
