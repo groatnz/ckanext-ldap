@@ -72,8 +72,9 @@ def ckan_user_exists(user_name):
     try:
         log.debug('user_name %s', user_name.lower()) # AVW 2020-08 debug LDAP
         user = get_user_dict(user_name.lower()) 
-        log.debug('user ', extra=user) # AVW 2020-08 debug LDAP
+        log.debug('user found') # AVW 2020-08 debug LDAP
     except toolkit.ObjectNotFound:
+        log.debug('user not found') # AVW 2020-08 debug LDAP
         return {
             u'exists': False,
             u'is_ldap': False
@@ -138,7 +139,7 @@ def get_or_create_ldap_user(ldap_user_dict):
         else:
             user_dict = get_user_dict(ldap_user_dict[u'username'])
             update = True
-
+    log.debug('Update %s', update) # AVW 2020-08 debug LDAP
     # If a user with the same ckan name already exists but is an LDAP user, this means
     # (given that we didn't find it above) that the conflict arises from having mangled
     # another user's LDAP name. There will not however be a conflict based on what is
